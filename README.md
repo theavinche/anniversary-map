@@ -303,3 +303,5 @@ BSD 3-Clause License
 - [Climate Gentrification and its impact on New York City: Judy Huynh](https://www.climategentrification.info/)
 
 [mapbox.com/resources#solutions](https://www.mapbox.com/resources#solutions)
+
+``
