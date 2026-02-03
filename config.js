@@ -31,7 +31,7 @@ var config = {
         pitch: 45,
         bearing: 0
       },
-      image: "./assets/01_aadarsh_nagar.jpg"
+      image: "./assets/01_aadarsh_nagar.JPG"
     },
 
     {
