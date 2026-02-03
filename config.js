@@ -45,7 +45,7 @@ var config = {
         pitch: 50,
         bearing: 20
       },
-      image: "./assets/02_bal_mandir.jpg"
+      image: "./assets/02_bal_mandir.JPG"
     },
 
     {
@@ -59,7 +59,7 @@ var config = {
         pitch: 45,
         bearing: -10
       },
-      image: "./assets/03_first_call.jpg"
+      image: "./assets/03_first_call.jpeg"
     },
 
     {
