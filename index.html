@@ -53,6 +53,28 @@ h1, h2, h3 {
 
 <body>
 
+<div id="music-control" style="position: fixed; top: 20px; right: 20px; z-index: 9999; background: white; padding: 10px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.2); cursor: pointer;" onclick="toggleMusic()">
+    🎵
+</div>
+
+<audio id="bg-music" loop>
+    <source src="./assets/song.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+function toggleMusic() {
+    var audio = document.getElementById("bg-music");
+    var btn = document.getElementById("music-control");
+    if (audio.paused) {
+        audio.play();
+        btn.innerHTML = "⏸️"; // Change icon to Pause
+    } else {
+        audio.pause();
+        btn.innerHTML = "🎵"; // Change icon to Play
+    }
+}
+</script>
+
     <div id="map"></div>
     <div id="story"></div>
 
