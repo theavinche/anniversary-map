@@ -5,126 +5,73 @@
     <title>Our Anniversary Story</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     
-    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+    
     <script src="https://unpkg.com/intersection-observer@0.5.1/intersection-observer.js"></script>
     <script src="https://unpkg.com/scrollama"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
 
     <style>
-        /* --- 1. PREMIUM STYLING --- */
         body {
             margin: 0;
             padding: 0;
             font-family: 'Lato', sans-serif;
             color: #333;
-            overflow-x: hidden; /* Stop horizontal scroll */
+            overflow-x: hidden;
+            background-color: transparent; /* Fixes white screen blocking map */
         }
         
-        /* The Map Container */
+        /* UPDATED: Map Layering Fix */
         #map {
             top: 0;
             height: 100vh;
             width: 100vw;
             position: fixed;
-            z-index: -1;
+            z-index: 0; /* Brings map forward */
         }
-
-        /* Typography */
-        h1, h2, h3, h4 {
-            font-family: 'Playfair Display', serif;
-            color: #2c3e50;
-        }
-
-        /* Header (Title Card) */
-        #header {
-            margin: auto;
-            width: 100%;
+        #story {
             position: relative;
-            z-index: 5;
-            background: rgba(255, 255, 255, 0.9); /* White fade */
-            padding: 4vh 0;
-            text-align: center;
-            border-bottom: 2px solid #d4af37; /* Gold line */
+            z-index: 10; /* Keeps story on top */
+        }
+
+        h1, h2, h3, h4 { font-family: 'Playfair Display', serif; color: #2c3e50; }
+
+        #header {
+            margin: auto; width: 100%; position: relative; z-index: 5;
+            background: rgba(255, 255, 255, 0.9); padding: 4vh 0;
+            text-align: center; border-bottom: 2px solid #d4af37;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        #header h1 {
-            font-size: 3.5em;
-            font-style: italic;
-            color: #d4af37;
-            margin: 0;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-        }
-        #header p {
-            font-size: 1.2em;
-            color: #555;
-            margin-top: 10px;
-        }
+        #header h1 { font-size: 3.5em; font-style: italic; color: #d4af37; margin: 0; }
+        #header p { font-size: 1.2em; color: #555; margin-top: 10px; }
 
-        /* Story Features Container */
-        #features {
-            padding-top: 10vh;
-            padding-bottom: 10vh;
-        }
+        #features { padding-top: 10vh; padding-bottom: 10vh; }
 
-        /* Individual Story Cards (Glassmorphism) */
-        .step {
-            padding-bottom: 50vh;
-            opacity: 0.25; /* Dim inactive cards */
-            transition: opacity 0.6s ease;
-        }
-        .step.active {
-            opacity: 1; /* Highlight active card */
-        }
+        .step { padding-bottom: 50vh; opacity: 0.25; transition: opacity 0.6s ease; }
+        .step.active { opacity: 1; }
         .step div {
-            padding: 30px;
-            line-height: 25px;
-            font-size: 16px;
-            background: rgba(255, 255, 255, 0.90); /* Frosted Glass */
-            border: 1px solid rgba(212, 175, 55, 0.4); /* Gold Border */
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15); /* Soft Shadow */
-            backdrop-filter: blur(8px);
-            border-radius: 12px;
-            width: 40%;
-            margin-left: 5%; /* Left align */
+            padding: 30px; line-height: 25px; font-size: 16px;
+            background: rgba(255, 255, 255, 0.90);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            backdrop-filter: blur(8px); border-radius: 12px;
+            width: 40%; margin-left: 5%;
         }
+        .step img { width: 100%; border-radius: 8px; border: 2px solid #d4af37; margin-bottom: 15px; }
 
-        /* Image Styling */
-        .step img {
-            width: 100%;
-            border-radius: 8px;
-            border: 2px solid #d4af37; /* Gold Frame */
-            margin-bottom: 15px;
-        }
-
-        /* Music Button */
         #music-control {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            background: white;
-            padding: 12px;
-            border-radius: 50%;
-            border: 2px solid #d4af37;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            cursor: pointer;
-            font-size: 20px;
-            transition: transform 0.2s;
+            position: fixed; top: 20px; right: 20px; z-index: 9999;
+            background: white; padding: 12px; border-radius: 50%;
+            border: 2px solid #d4af37; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            cursor: pointer; font-size: 20px; transition: transform 0.2s;
         }
-        #music-control:hover {
-            transform: scale(1.1);
-        }
+        #music-control:hover { transform: scale(1.1); }
 
-        /* Floating Hearts Animation */
         .heart {
-            position: fixed;
-            bottom: -10vh;
-            font-size: 20px;
-            color: #e74c3c;
-            opacity: 0;
-            z-index: 0;
+            position: fixed; bottom: -10vh; font-size: 20px;
+            color: #e74c3c; opacity: 0; z-index: 0;
             animation: floatUp 8s linear infinite;
         }
         @keyframes floatUp {
@@ -133,15 +80,9 @@
             100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
         }
 
-        /* Mobile Adjustments */
         @media (max-width: 750px) {
-            .step div {
-                width: 90%;
-                margin: 0 auto;
-            }
-            #header h1 {
-                font-size: 2.5em;
-            }
+            .step div { width: 90%; margin: 0 auto; }
+            #header h1 { font-size: 2.5em; }
         }
     </style>
 </head>
