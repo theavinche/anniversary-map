@@ -7,93 +7,104 @@
     
     <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
-    
     <script src="https://unpkg.com/intersection-observer@0.5.1/intersection-observer.js"></script>
     <script src="https://unpkg.com/scrollama"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
     <style>
-        /* BASE SETTINGS */
-        body { margin: 0; padding: 0; font-family: 'Lato', sans-serif; overflow-x: hidden; background: transparent; }
-        #map { top: 0; height: 100vh; width: 100vw; position: fixed; z-index: 0; }
-        #story { position: relative; z-index: 10; }
-        h1, h2, h3 { font-family: 'Playfair Display', serif; color: #2c3e50; }
-
-        /* INTRO HEADER */
-        #header {
-            margin: auto; width: 100%; position: relative; z-index: 5;
-            background: rgba(255, 255, 255, 0.95); padding: 6vh 0;
-            text-align: center; border-bottom: 2px solid #d4af37;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            backdrop-filter: blur(10px);
+        /* BASE & MAP STYLING */
+        body { margin: 0; padding: 0; font-family: 'Lora', serif; overflow-x: hidden; background: #fdfbf7; color: #2c2c2c; }
+        
+        /* Adds a warm, nostalgic, cinematic filter to the map */
+        #map { 
+            top: 0; height: 100vh; width: 100vw; position: fixed; z-index: 0; 
+            filter: sepia(30%) contrast(0.95) saturate(0.8) hue-rotate(-5deg);
         }
-        #header h1 { font-size: 3.2em; font-style: italic; color: #d4af37; margin: 0; }
-        #header p { font-size: 1.1em; color: #555; margin-top: 10px; font-weight: 300; }
+        #story { position: relative; z-index: 10; }
 
-        /* THE NEW "BOTTOM SHEET" STORY CARDS */
+        /* THE COVER PAGE */
+        #header {
+            margin: 0; width: 100%; height: 100vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: linear-gradient(to bottom, rgba(253, 251, 247, 0.95) 40%, rgba(253, 251, 247, 0.0) 100%);
+            text-align: center;
+        }
+        #header h1 { font-family: 'Lora', serif; font-size: 3.5em; font-weight: 400; color: #2c2c2c; margin: 0; letter-spacing: 1px; }
+        #header p { font-family: 'Caveat', cursive; font-size: 2em; color: #6b5b4c; margin-top: 5px; font-weight: 400; }
+        .scroll-hint { font-family: 'Lora', serif; font-size: 0.8em; text-transform: uppercase; letter-spacing: 3px; color: #888; margin-top: 40px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+
+        /* SCRAPBOOK MOBILE CARDS */
         #features { padding-bottom: 5vh; }
         .step {
-            height: 100vh; /* Forces each card to take exactly one screen */
-            display: flex;
-            align-items: flex-end; /* Pushes the card to the bottom */
-            justify-content: center;
-            padding-bottom: 8vh; /* Lifts it slightly off the bottom edge */
-            opacity: 0.1;
-            transition: opacity 0.6s ease;
+            height: 100vh; 
+            display: flex; align-items: flex-end; justify-content: center;
+            padding-bottom: 8vh; 
+            opacity: 0; transition: opacity 0.8s ease, transform 0.8s ease;
+            transform: translateY(20px);
         }
-        .step.active { opacity: 1; }
+        .step.active { opacity: 1; transform: translateY(0); }
 
-        /* THE CARD ITSELF */
+        /* THE PAPER TEXTURE CARD */
         .step div {
-            width: 90%;
-            max-width: 500px;
-            background: rgba(255, 255, 255, 0.92); /* Frosted Glass */
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(212, 175, 55, 0.4);
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            padding: 15px;
-            display: flex; /* Puts image and text side-by-side */
-            align-items: center;
-            gap: 15px;
+            width: 88%; max-width: 450px;
+            background: #ffffff;
+            border: 1px solid #eaeaea;
+            border-radius: 4px; /* Sharp, paper-like edges */
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08), 0 5px 15px rgba(0,0,0,0.03);
+            padding: 25px;
+            display: flex; align-items: center; gap: 20px;
+            position: relative;
         }
 
-        /* CLICKABLE THUMBNAIL */
+        /* POLAROID STYLE IMAGES */
         .step img {
-            width: 90px;
-            height: 90px;
-            object-fit: cover; /* Keeps image beautifully squared */
-            border-radius: 12px;
-            border: 2px solid #d4af37;
-            cursor: pointer;
-            flex-shrink: 0;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 100px; height: 100px; object-fit: cover;
+            background: white;
+            padding: 6px 6px 18px 6px; /* Thicker bottom padding for Polaroid look */
+            border: 1px solid #e2e2e2;
+            box-shadow: 2px 4px 12px rgba(0,0,0,0.1);
+            transform: rotate(-3deg); /* Slightly crooked like placed by hand */
+            cursor: pointer; flex-shrink: 0;
+            transition: transform 0.3s ease;
         }
+        .step img:hover { transform: rotate(0deg) scale(1.05); }
         
-        /* TEXT NEXT TO THUMBNAIL */
+        /* TYPOGRAPHY IN THE CARD */
         .step-text { text-align: left; }
-        .step h3 { margin: 0 0 5px 0; font-size: 1.2em; line-height: 1.2; }
-        .step p { margin: 0; font-size: 0.95em; line-height: 1.4; color: #444; }
-        .tap-hint { display: block; font-size: 0.7em; color: #d4af37; margin-top: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .date-text { font-family: 'Caveat', cursive; font-size: 1.6em; color: #8b7355; line-height: 1; margin: 0 0 5px 0; }
+        .step h3 { font-size: 1.1em; font-weight: 600; margin: 0 0 8px 0; letter-spacing: 0.5px; }
+        .step p { margin: 0; font-size: 0.95em; line-height: 1.6; color: #4a4a4a; }
+        .tap-hint { display: block; font-family: 'Caveat', cursive; font-size: 1.2em; color: #a99a86; margin-top: 8px; }
 
-        /* FULL SCREEN LIGHTBOX (Hidden by default) */
+        /* ELEGANT LIGHTBOX */
         #lightbox {
             display: none; position: fixed; z-index: 99999;
             left: 0; top: 0; width: 100vw; height: 100vh;
-            background-color: rgba(15, 15, 15, 0.95);
-            backdrop-filter: blur(10px);
-            align-items: center; justify-content: center;
-            flex-direction: column; opacity: 0; transition: opacity 0.3s ease;
+            background-color: rgba(253, 251, 247, 0.98); /* Warm ivory overlay instead of black */
+            align-items: center; justify-content: center; flex-direction: column; 
+            opacity: 0; transition: opacity 0.4s ease;
         }
         #lightbox.show { display: flex; opacity: 1; }
-        #lightbox img { max-width: 95vw; max-height: 85vh; border-radius: 12px; border: 2px solid #d4af37; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
-        .close-hint { color: #d4af37; font-family: 'Lato', sans-serif; margin-top: 20px; font-size: 0.9em; letter-spacing: 2px; text-transform: uppercase; }
+        #lightbox img { 
+            max-width: 90vw; max-height: 80vh; 
+            background: white; padding: 10px 10px 30px 10px; 
+            border: 1px solid #e2e2e2; box-shadow: 0 20px 50px rgba(0,0,0,0.15); 
+        }
+        .close-hint { font-family: 'Lora', serif; font-size: 0.8em; letter-spacing: 2px; color: #888; margin-top: 30px; text-transform: uppercase; }
 
-        /* MUSIC & HEARTS */
-        #music-control { position: fixed; top: 20px; right: 20px; z-index: 9000; background: white; padding: 10px; border-radius: 50%; border: 2px solid #d4af37; box-shadow: 0 4px 10px rgba(0,0,0,0.2); cursor: pointer; font-size: 20px; }
-        .heart { position: fixed; bottom: -10vh; font-size: 20px; color: #e74c3c; opacity: 0; z-index: 1; animation: floatUp 8s linear infinite; }
-        @keyframes floatUp { 0% { transform: translateY(0) scale(0.5); opacity: 0; } 20% { opacity: 0.7; } 100% { transform: translateY(-110vh) scale(1.2); opacity: 0; } }
+        /* MINIMALIST MUSIC BUTTON */
+        #music-control { 
+            position: fixed; top: 25px; right: 25px; z-index: 9000; 
+            background: transparent; border: 1px solid #888; color: #666;
+            padding: 8px 16px; border-radius: 30px; 
+            font-family: 'Lora', serif; font-size: 0.75em; letter-spacing: 2px;
+            cursor: pointer; transition: all 0.3s ease; backdrop-filter: blur(5px);
+        }
+        #music-control:hover { background: #888; color: white; }
     </style>
 </head>
 
@@ -101,18 +112,19 @@
 
     <div id="map"></div>
 
-    <div id="music-control" onclick="toggleMusic()">🎵</div>
+    <button id="music-control" onclick="toggleMusic()">PLAY MUSIC</button>
     <audio id="bg-music" loop><source src="./assets/song.mp3" type="audio/mpeg"></audio>
 
     <div id="lightbox" onclick="closeLightbox()">
         <img id="lightbox-img" src="">
-        <div class="close-hint">Tap anywhere to close</div>
+        <div class="close-hint">Close</div>
     </div>
 
     <div id="story">
         <div id="header">
-            <h1>Our Journey</h1>
-            <p>Scroll to explore our memories...</p>
+            <h1 id="main-title">Our Journey</h1>
+            <p id="sub-title">A story across cities, years, and forever</p>
+            <div class="scroll-hint">Begin Scrolling</div>
         </div>
         <div id="features"></div>
     </div>
@@ -120,61 +132,64 @@
     <script src="./config.js"></script>
 
     <script>
-        // Set Header Text
-        document.querySelector('#header h1').innerText = config.title;
-        document.querySelector('#header p').innerText = config.subtitle;
+        document.getElementById('main-title').innerText = config.title;
+        document.getElementById('sub-title').innerText = config.subtitle;
 
         var features = document.getElementById('features');
 
-        // GENERATE CHAPTERS WITH THUMBNAILS
         config.chapters.forEach((record, idx) => {
             var container = document.createElement('div');
             var chapter = document.createElement('div');
             
-            // 1. Add Image (Thumbnail)
             if (record.image) {
                 var image = new Image();
                 image.src = record.image;
-                // Click to open Lightbox
                 image.onclick = function() { openLightbox(this.src); };
                 chapter.appendChild(image);
             }
 
-            // 2. Add Text Container
             var textContainer = document.createElement('div');
             textContainer.classList.add('step-text');
 
             if (record.title) {
-                var title = document.createElement('h3');
-                title.innerText = record.title;
-                textContainer.appendChild(title);
+                // Split title logic to make the date cursive and the title serif
+                var parts = record.title.split(' • ');
+                if(parts.length > 1) {
+                    var dateEl = document.createElement('div');
+                    dateEl.classList.add('date-text');
+                    dateEl.innerText = parts[0];
+                    textContainer.appendChild(dateEl);
+                    
+                    var titleEl = document.createElement('h3');
+                    titleEl.innerText = parts[1];
+                    textContainer.appendChild(titleEl);
+                } else {
+                    var titleEl = document.createElement('h3');
+                    titleEl.innerText = record.title;
+                    textContainer.appendChild(titleEl);
+                }
             }
+
             if (record.description) {
                 var story = document.createElement('p');
                 story.innerHTML = record.description;
                 textContainer.appendChild(story);
                 
-                // Add "Tap" hint if there is an image
                 if(record.image) {
                     var hint = document.createElement('span');
                     hint.classList.add('tap-hint');
-                    hint.innerText = "👆 Tap photo to expand";
+                    hint.innerText = "Click to view photo";
                     textContainer.appendChild(hint);
                 }
             }
 
             chapter.appendChild(textContainer);
-            
-            // Build the card
             container.setAttribute('id', record.id);
             container.classList.add('step');
-            if (idx === 0) container.classList.add('active');
-            
             container.appendChild(chapter);
             features.appendChild(container);
         });
 
-        // MAPBOX SETUP
         mapboxgl.accessToken = config.accessToken;
         var map = new mapboxgl.Map({
             container: 'map',
@@ -186,12 +201,11 @@
             interactive: false
         });
 
-        // SCROLL SETUP
         var scroller = scrollama();
         map.on("load", function() {
             scroller.setup({
                 step: '.step',
-                offset: 0.85, /* Triggers when card hits bottom of screen */
+                offset: 0.85,
                 progress: true
             })
             .onStepEnter(response => {
@@ -204,35 +218,35 @@
             });
         });
 
-        // LIGHTBOX FUNCTIONS
         function openLightbox(imgSrc) {
             var lightbox = document.getElementById('lightbox');
             document.getElementById('lightbox-img').src = imgSrc;
             lightbox.style.display = 'flex';
-            setTimeout(() => { lightbox.classList.add('show'); }, 10); // Smooth fade in
+            setTimeout(() => { lightbox.classList.add('show'); }, 10);
         }
         function closeLightbox() {
             var lightbox = document.getElementById('lightbox');
             lightbox.classList.remove('show');
-            setTimeout(() => { lightbox.style.display = 'none'; }, 300); // Wait for fade out
+            setTimeout(() => { lightbox.style.display = 'none'; }, 400);
         }
 
-        // MUSIC & HEARTS
         function toggleMusic() {
             var audio = document.getElementById("bg-music");
             var btn = document.getElementById("music-control");
-            if (audio.paused) { audio.play(); btn.innerHTML = "⏸️"; } 
-            else { audio.pause(); btn.innerHTML = "🎵"; }
+            if (audio.paused) { 
+                audio.play(); 
+                btn.innerText = "PAUSE MUSIC"; 
+                btn.style.background = "#6b5b4c";
+                btn.style.color = "white";
+                btn.style.borderColor = "#6b5b4c";
+            } else { 
+                audio.pause(); 
+                btn.innerText = "PLAY MUSIC"; 
+                btn.style.background = "transparent";
+                btn.style.color = "#666";
+                btn.style.borderColor = "#888";
+            }
         }
-        setInterval(() => {
-            const heart = document.createElement("div");
-            heart.classList.add("heart");
-            heart.innerHTML = "❤️";
-            heart.style.left = Math.random() * 100 + "vw";
-            heart.style.animationDuration = Math.random() * 3 + 5 + "s";
-            document.body.appendChild(heart);
-            setTimeout(() => { heart.remove(); }, 8000);
-        }, 800);
     </script>
 </body>
 </html>
