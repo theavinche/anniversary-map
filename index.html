@@ -15,14 +15,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
     <style>
-        /* 1. MAP DEMOTION (Supportive Background) */
+        /* MAP DEMOTION */
         body { margin: 0; padding: 0; font-family: 'Lora', serif; overflow-x: hidden; background: #fdfbf7; color: #2c2c2c; }
         
         #map { 
             top: 0; height: 100vh; width: 100vw; position: fixed; z-index: 0; 
-            /* Pushes map into the background, makes it faded and warm */
             filter: sepia(40%) contrast(0.85) saturate(0.6) hue-rotate(-5deg);
-            opacity: 0.45; /* Drastically reduces map dominance */
+            opacity: 0.45; 
         }
         #story { position: relative; z-index: 10; }
 
@@ -38,28 +37,26 @@
         .scroll-hint { font-family: 'Lora', serif; font-size: 0.8em; text-transform: uppercase; letter-spacing: 3px; color: #888; margin-top: 50px; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
 
-        /* 2. CARD LAYOUT FIX (No Clipping) */
-        #features { padding-bottom: 20vh; padding-top: 10vh; }
+        /* CARD LAYOUT (Fading Fix) */
+        #features { padding-bottom: 10vh; padding-top: 10vh; }
         .step {
-            /* Removed 100vh, added margin to create natural scroll space */
-            margin-bottom: 70vh; 
-            display: flex; justify-content: center;
-            opacity: 0; transition: opacity 0.6s ease, transform 0.6s ease;
+            /* Changed to 100vh so the card stays solid on screen much longer */
+            min-height: 100vh; 
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.8s ease, transform 0.8s ease;
             transform: translateY(30px);
         }
-        /* Stays active longer */
         .step.active { opacity: 1; transform: translateY(0); }
 
         .card-content {
             width: 88%; max-width: 500px;
-            background: rgba(255, 255, 255, 0.95); /* More solid white */
+            background: rgba(255, 255, 255, 0.95); 
             border: 1px solid #eaeaea; border-radius: 8px; 
             box-shadow: 0 20px 40px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
             padding: 25px;
             display: flex; align-items: flex-start; gap: 20px;
         }
 
-        /* Mobile specific card adjustments */
         @media (max-width: 600px) {
             .card-content { flex-direction: column; align-items: center; text-align: center; padding: 20px 15px; }
             .step-text { text-align: center !important; }
@@ -81,14 +78,13 @@
         .step p { margin: 0; font-size: 1em; line-height: 1.6; color: #4a4a4a; }
         .tap-hint { display: inline-block; font-family: 'Caveat', cursive; font-size: 1.3em; color: #a99a86; margin-top: 10px; cursor: pointer; }
 
-        /* 3. ENHANCED LIGHTBOX (Image + Text) */
+        /* ENHANCED LIGHTBOX */
         #lightbox {
             display: none; position: fixed; z-index: 99999;
             left: 0; top: 0; width: 100vw; height: 100vh;
             background-color: rgba(253, 251, 247, 0.98); 
             opacity: 0; transition: opacity 0.4s ease;
-            overflow-y: auto; /* Allows scrolling if text is long */
-            padding-top: 5vh; padding-bottom: 5vh;
+            overflow-y: auto; padding-top: 5vh; padding-bottom: 5vh;
             box-sizing: border-box;
         }
         #lightbox.show { display: block; opacity: 1; }
@@ -98,7 +94,7 @@
             display: flex; flex-direction: column; align-items: center; text-align: center;
         }
         #lightbox img { 
-            max-width: 100%; max-height: 60vh; 
+            max-width: 100%; max-height: 55vh; 
             background: white; padding: 10px 10px 25px 10px; 
             border: 1px solid #e2e2e2; box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
             margin-bottom: 25px;
@@ -161,7 +157,6 @@
             var cardContent = document.createElement('div');
             cardContent.classList.add('card-content');
             
-            // Extract variables for lightbox
             var parsedDate = "";
             var parsedTitle = record.title;
             var parts = record.title ? record.title.split(' • ') : [];
@@ -170,7 +165,6 @@
                 parsedTitle = parts[1];
             }
 
-            // Image click now passes text data to the lightbox
             if (record.image) {
                 var image = new Image();
                 image.src = record.image;
@@ -228,22 +222,22 @@
         map.on("load", function() {
             scroller.setup({
                 step: '.step',
-                offset: 0.7, /* 4. FADING FIX: Triggers at 70% of screen, stays active longer */
+                offset: 0.6, /* Triggers comfortably right in the middle of the screen */
                 progress: true
             })
             .onStepEnter(response => {
                 var chapter = config.chapters.find(chap => chap.id === response.element.id);
                 response.element.classList.add('active');
                 
-                /* 5. SMOOTH FLIGHT FIX: Forces the cinematic airplane arc on mobile */
+                /* FASTER, MORE PRONOUNCED MAP FLIGHT */
                 map.flyTo({
                     center: chapter.location.center,
                     zoom: chapter.location.zoom,
                     pitch: chapter.location.pitch,
                     bearing: chapter.location.bearing,
-                    speed: 0.4,       // Makes it fly slower
-                    curve: 1.2,       // Forces a zoom-out, fly, zoom-in arc
-                    essential: true   // Overrides phone battery-saver stopping animations
+                    speed: 1.2,       /* Sped up dramatically (was 0.4) */
+                    curve: 1.5,       /* Deep zooming curve to make transitions cinematic */
+                    essential: true
                 });
             })
             .onStepExit(response => {
