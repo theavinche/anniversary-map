@@ -86,7 +86,7 @@ var config = {
         pitch: 50,
         bearing: 15
       },
-      image: "./assets/05_kota.jpg"
+      image: "./assets/05_kota.jpeg"
     },
 
     {
@@ -114,7 +114,7 @@ var config = {
         pitch: 50,
         bearing: -10
       },
-      image: "./assets/07_jaipur_again.jpg"
+      image: "./assets/07_jaipur_again.JPG"
     },
 
     {
@@ -128,7 +128,7 @@ var config = {
         pitch: 50,
         bearing: 0
       },
-      image: "./assets/08_indore.jpg"
+      image: "./assets/08_indore.JPG"
     },
 
     {
@@ -156,7 +156,7 @@ var config = {
         pitch: 50,
         bearing: 0
       },
-      image: "./assets/10_jaipur_trip.jpg"
+      image: "./assets/10_jaipur_trip.JPG"
     },
 
     {
@@ -170,7 +170,7 @@ var config = {
         pitch: 55,
         bearing: -15
       },
-      image: "./assets/11_engagement.jpg"
+      image: "./assets/11_engagement.JPG"
     },
 
     {
@@ -184,7 +184,7 @@ var config = {
         pitch: 55,
         bearing: 0
       },
-      image: "./assets/12_wedding.jpg"
+      image: "./assets/12_wedding.JPG"
     },
 
     {
@@ -198,7 +198,7 @@ var config = {
         pitch: 50,
         bearing: 0
       },
-      image: "./assets/13_andaman.jpg"
+      image: "./assets/13_andaman.JPG"
     },
 
     {
@@ -212,7 +212,7 @@ var config = {
         pitch: 50,
         bearing: 0
       },
-      image: "./assets/14_baby.jpg"
+      image: "./assets/14_baby.JPG"
     },
 
     {
@@ -226,7 +226,7 @@ var config = {
         pitch: 45,
         bearing: 0
       },
-      image: "./assets/15_birthday2.jpg"
+      image: "./assets/15_birthday2.JPG"
     },
 
     {
@@ -240,7 +240,7 @@ var config = {
         pitch: 0,
         bearing: 0
       },
-      image: "./assets/16_closing.jpg"
+      image: "./assets/16_closing.JPG"
     }
     ]
 };
