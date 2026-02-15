@@ -15,116 +15,132 @@
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
     <style>
-        /* BASE & MAP STYLING */
+        /* 1. MAP DEMOTION (Supportive Background) */
         body { margin: 0; padding: 0; font-family: 'Lora', serif; overflow-x: hidden; background: #fdfbf7; color: #2c2c2c; }
         
-        /* Adds a warm, nostalgic, cinematic filter to the map */
         #map { 
             top: 0; height: 100vh; width: 100vw; position: fixed; z-index: 0; 
-            filter: sepia(30%) contrast(0.95) saturate(0.8) hue-rotate(-5deg);
+            /* Pushes map into the background, makes it faded and warm */
+            filter: sepia(40%) contrast(0.85) saturate(0.6) hue-rotate(-5deg);
+            opacity: 0.45; /* Drastically reduces map dominance */
         }
         #story { position: relative; z-index: 10; }
 
-        /* THE COVER PAGE */
+        /* COVER PAGE */
         #header {
             margin: 0; width: 100%; height: 100vh;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: linear-gradient(to bottom, rgba(253, 251, 247, 0.95) 40%, rgba(253, 251, 247, 0.0) 100%);
+            background: linear-gradient(to bottom, rgba(253, 251, 247, 1) 20%, rgba(253, 251, 247, 0.0) 100%);
             text-align: center;
         }
         #header h1 { font-family: 'Lora', serif; font-size: 3.5em; font-weight: 400; color: #2c2c2c; margin: 0; letter-spacing: 1px; }
-        #header p { font-family: 'Caveat', cursive; font-size: 2em; color: #6b5b4c; margin-top: 5px; font-weight: 400; }
-        .scroll-hint { font-family: 'Lora', serif; font-size: 0.8em; text-transform: uppercase; letter-spacing: 3px; color: #888; margin-top: 40px; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+        #header p { font-family: 'Caveat', cursive; font-size: 2.2em; color: #6b5b4c; margin-top: 5px; font-weight: 400; }
+        .scroll-hint { font-family: 'Lora', serif; font-size: 0.8em; text-transform: uppercase; letter-spacing: 3px; color: #888; margin-top: 50px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
 
-        /* SCRAPBOOK MOBILE CARDS */
-        #features { padding-bottom: 5vh; }
+        /* 2. CARD LAYOUT FIX (No Clipping) */
+        #features { padding-bottom: 20vh; padding-top: 10vh; }
         .step {
-            height: 100vh; 
-            display: flex; align-items: flex-end; justify-content: center;
-            padding-bottom: 8vh; 
-            opacity: 0; transition: opacity 0.8s ease, transform 0.8s ease;
-            transform: translateY(20px);
+            /* Removed 100vh, added margin to create natural scroll space */
+            margin-bottom: 70vh; 
+            display: flex; justify-content: center;
+            opacity: 0; transition: opacity 0.6s ease, transform 0.6s ease;
+            transform: translateY(30px);
         }
+        /* Stays active longer */
         .step.active { opacity: 1; transform: translateY(0); }
 
-        /* THE PAPER TEXTURE CARD */
-        .step div {
-            width: 88%; max-width: 450px;
-            background: #ffffff;
-            border: 1px solid #eaeaea;
-            border-radius: 4px; /* Sharp, paper-like edges */
-            box-shadow: 0 15px 35px rgba(0,0,0,0.08), 0 5px 15px rgba(0,0,0,0.03);
+        .card-content {
+            width: 88%; max-width: 500px;
+            background: rgba(255, 255, 255, 0.95); /* More solid white */
+            border: 1px solid #eaeaea; border-radius: 8px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
             padding: 25px;
-            display: flex; align-items: center; gap: 20px;
-            position: relative;
+            display: flex; align-items: flex-start; gap: 20px;
         }
 
-        /* POLAROID STYLE IMAGES */
+        /* Mobile specific card adjustments */
+        @media (max-width: 600px) {
+            .card-content { flex-direction: column; align-items: center; text-align: center; padding: 20px 15px; }
+            .step-text { text-align: center !important; }
+            .step img { transform: rotate(0deg) !important; width: 120px !important; height: 120px !important; margin-bottom: 10px; }
+        }
+
         .step img {
             width: 100px; height: 100px; object-fit: cover;
-            background: white;
-            padding: 6px 6px 18px 6px; /* Thicker bottom padding for Polaroid look */
-            border: 1px solid #e2e2e2;
-            box-shadow: 2px 4px 12px rgba(0,0,0,0.1);
-            transform: rotate(-3deg); /* Slightly crooked like placed by hand */
-            cursor: pointer; flex-shrink: 0;
+            background: white; padding: 5px 5px 15px 5px; 
+            border: 1px solid #e2e2e2; box-shadow: 2px 4px 10px rgba(0,0,0,0.08);
+            transform: rotate(-2deg); cursor: pointer; flex-shrink: 0;
             transition: transform 0.3s ease;
         }
-        .step img:hover { transform: rotate(0deg) scale(1.05); }
+        .step img:hover { transform: rotate(0deg) scale(1.03); }
         
-        /* TYPOGRAPHY IN THE CARD */
-        .step-text { text-align: left; }
-        .date-text { font-family: 'Caveat', cursive; font-size: 1.6em; color: #8b7355; line-height: 1; margin: 0 0 5px 0; }
-        .step h3 { font-size: 1.1em; font-weight: 600; margin: 0 0 8px 0; letter-spacing: 0.5px; }
-        .step p { margin: 0; font-size: 0.95em; line-height: 1.6; color: #4a4a4a; }
-        .tap-hint { display: block; font-family: 'Caveat', cursive; font-size: 1.2em; color: #a99a86; margin-top: 8px; }
+        .step-text { text-align: left; width: 100%; }
+        .date-text { font-family: 'Caveat', cursive; font-size: 1.8em; color: #8b7355; line-height: 1; margin: 0 0 5px 0; }
+        .step h3 { font-size: 1.2em; font-weight: 600; margin: 0 0 8px 0; letter-spacing: 0.5px; }
+        .step p { margin: 0; font-size: 1em; line-height: 1.6; color: #4a4a4a; }
+        .tap-hint { display: inline-block; font-family: 'Caveat', cursive; font-size: 1.3em; color: #a99a86; margin-top: 10px; cursor: pointer; }
 
-        /* ELEGANT LIGHTBOX */
+        /* 3. ENHANCED LIGHTBOX (Image + Text) */
         #lightbox {
             display: none; position: fixed; z-index: 99999;
             left: 0; top: 0; width: 100vw; height: 100vh;
-            background-color: rgba(253, 251, 247, 0.98); /* Warm ivory overlay instead of black */
-            align-items: center; justify-content: center; flex-direction: column; 
+            background-color: rgba(253, 251, 247, 0.98); 
             opacity: 0; transition: opacity 0.4s ease;
+            overflow-y: auto; /* Allows scrolling if text is long */
+            padding-top: 5vh; padding-bottom: 5vh;
+            box-sizing: border-box;
         }
-        #lightbox.show { display: flex; opacity: 1; }
+        #lightbox.show { display: block; opacity: 1; }
+        
+        .lightbox-container {
+            max-width: 600px; margin: 0 auto; width: 90%;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+        }
         #lightbox img { 
-            max-width: 90vw; max-height: 80vh; 
-            background: white; padding: 10px 10px 30px 10px; 
-            border: 1px solid #e2e2e2; box-shadow: 0 20px 50px rgba(0,0,0,0.15); 
+            max-width: 100%; max-height: 60vh; 
+            background: white; padding: 10px 10px 25px 10px; 
+            border: 1px solid #e2e2e2; box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
+            margin-bottom: 25px;
         }
-        .close-hint { font-family: 'Lora', serif; font-size: 0.8em; letter-spacing: 2px; color: #888; margin-top: 30px; text-transform: uppercase; }
+        #lb-date { font-family: 'Caveat', cursive; font-size: 2.2em; color: #8b7355; margin-bottom: 5px; line-height: 1;}
+        #lb-title { font-family: 'Lora', serif; font-size: 1.4em; font-weight: 600; color: #2c2c2c; margin: 0 0 15px 0; }
+        #lb-desc { font-family: 'Lora', serif; font-size: 1.1em; line-height: 1.7; color: #4a4a4a; margin: 0; }
+        
+        .close-hint { font-family: 'Lora', serif; font-size: 0.8em; letter-spacing: 2px; color: #888; margin-top: 40px; text-transform: uppercase; cursor: pointer; border: 1px solid #ccc; padding: 10px 20px; border-radius: 20px;}
 
-        /* MINIMALIST MUSIC BUTTON */
+        /* MUSIC BUTTON */
         #music-control { 
-            position: fixed; top: 25px; right: 25px; z-index: 9000; 
-            background: transparent; border: 1px solid #888; color: #666;
+            position: fixed; top: 20px; right: 20px; z-index: 9000; 
+            background: rgba(255,255,255,0.8); border: 1px solid #888; color: #666;
             padding: 8px 16px; border-radius: 30px; 
             font-family: 'Lora', serif; font-size: 0.75em; letter-spacing: 2px;
-            cursor: pointer; transition: all 0.3s ease; backdrop-filter: blur(5px);
+            cursor: pointer; backdrop-filter: blur(5px);
         }
-        #music-control:hover { background: #888; color: white; }
     </style>
 </head>
 
 <body>
-
     <div id="map"></div>
 
     <button id="music-control" onclick="toggleMusic()">PLAY MUSIC</button>
     <audio id="bg-music" loop><source src="./assets/song.mp3" type="audio/mpeg"></audio>
 
-    <div id="lightbox" onclick="closeLightbox()">
-        <img id="lightbox-img" src="">
-        <div class="close-hint">Close</div>
+    <div id="lightbox">
+        <div class="lightbox-container">
+            <img id="lightbox-img" src="">
+            <div id="lb-date"></div>
+            <div id="lb-title"></div>
+            <div id="lb-desc"></div>
+            <div class="close-hint" onclick="closeLightbox()">Close Story</div>
+        </div>
     </div>
 
     <div id="story">
         <div id="header">
             <h1 id="main-title">Our Journey</h1>
             <p id="sub-title">A story across cities, years, and forever</p>
-            <div class="scroll-hint">Begin Scrolling</div>
+            <div class="scroll-hint">Scroll Down</div>
         </div>
         <div id="features"></div>
     </div>
@@ -139,37 +155,45 @@
 
         config.chapters.forEach((record, idx) => {
             var container = document.createElement('div');
-            var chapter = document.createElement('div');
+            container.setAttribute('id', record.id);
+            container.classList.add('step');
+
+            var cardContent = document.createElement('div');
+            cardContent.classList.add('card-content');
             
+            // Extract variables for lightbox
+            var parsedDate = "";
+            var parsedTitle = record.title;
+            var parts = record.title ? record.title.split(' • ') : [];
+            if(parts.length > 1) {
+                parsedDate = parts[0];
+                parsedTitle = parts[1];
+            }
+
+            // Image click now passes text data to the lightbox
             if (record.image) {
                 var image = new Image();
                 image.src = record.image;
-                image.onclick = function() { openLightbox(this.src); };
-                chapter.appendChild(image);
+                image.onclick = function() { 
+                    openLightbox(this.src, parsedDate, parsedTitle, record.description); 
+                };
+                cardContent.appendChild(image);
             }
 
             var textContainer = document.createElement('div');
             textContainer.classList.add('step-text');
 
-            if (record.title) {
-                // Split title logic to make the date cursive and the title serif
-                var parts = record.title.split(' • ');
-                if(parts.length > 1) {
-                    var dateEl = document.createElement('div');
-                    dateEl.classList.add('date-text');
-                    dateEl.innerText = parts[0];
-                    textContainer.appendChild(dateEl);
-                    
-                    var titleEl = document.createElement('h3');
-                    titleEl.innerText = parts[1];
-                    textContainer.appendChild(titleEl);
-                } else {
-                    var titleEl = document.createElement('h3');
-                    titleEl.innerText = record.title;
-                    textContainer.appendChild(titleEl);
-                }
+            if (parsedDate) {
+                var dateEl = document.createElement('div');
+                dateEl.classList.add('date-text');
+                dateEl.innerText = parsedDate;
+                textContainer.appendChild(dateEl);
             }
-
+            if (parsedTitle) {
+                var titleEl = document.createElement('h3');
+                titleEl.innerText = parsedTitle;
+                textContainer.appendChild(titleEl);
+            }
             if (record.description) {
                 var story = document.createElement('p');
                 story.innerHTML = record.description;
@@ -178,15 +202,14 @@
                 if(record.image) {
                     var hint = document.createElement('span');
                     hint.classList.add('tap-hint');
-                    hint.innerText = "Click to view photo";
+                    hint.innerText = "Read entry & view photo ➔";
+                    hint.onclick = function() { openLightbox(record.image, parsedDate, parsedTitle, record.description); };
                     textContainer.appendChild(hint);
                 }
             }
 
-            chapter.appendChild(textContainer);
-            container.setAttribute('id', record.id);
-            container.classList.add('step');
-            container.appendChild(chapter);
+            cardContent.appendChild(textContainer);
+            container.appendChild(cardContent);
             features.appendChild(container);
         });
 
@@ -205,25 +228,40 @@
         map.on("load", function() {
             scroller.setup({
                 step: '.step',
-                offset: 0.85,
+                offset: 0.7, /* 4. FADING FIX: Triggers at 70% of screen, stays active longer */
                 progress: true
             })
             .onStepEnter(response => {
                 var chapter = config.chapters.find(chap => chap.id === response.element.id);
                 response.element.classList.add('active');
-                map.flyTo(chapter.location);
+                
+                /* 5. SMOOTH FLIGHT FIX: Forces the cinematic airplane arc on mobile */
+                map.flyTo({
+                    center: chapter.location.center,
+                    zoom: chapter.location.zoom,
+                    pitch: chapter.location.pitch,
+                    bearing: chapter.location.bearing,
+                    speed: 0.4,       // Makes it fly slower
+                    curve: 1.2,       // Forces a zoom-out, fly, zoom-in arc
+                    essential: true   // Overrides phone battery-saver stopping animations
+                });
             })
             .onStepExit(response => {
                 response.element.classList.remove('active');
             });
         });
 
-        function openLightbox(imgSrc) {
-            var lightbox = document.getElementById('lightbox');
+        function openLightbox(imgSrc, date, title, desc) {
             document.getElementById('lightbox-img').src = imgSrc;
-            lightbox.style.display = 'flex';
+            document.getElementById('lb-date').innerText = date || "";
+            document.getElementById('lb-title').innerText = title || "";
+            document.getElementById('lb-desc').innerHTML = desc || "";
+            
+            var lightbox = document.getElementById('lightbox');
+            lightbox.style.display = 'block';
             setTimeout(() => { lightbox.classList.add('show'); }, 10);
         }
+        
         function closeLightbox() {
             var lightbox = document.getElementById('lightbox');
             lightbox.classList.remove('show');
@@ -236,15 +274,11 @@
             if (audio.paused) { 
                 audio.play(); 
                 btn.innerText = "PAUSE MUSIC"; 
-                btn.style.background = "#6b5b4c";
-                btn.style.color = "white";
-                btn.style.borderColor = "#6b5b4c";
+                btn.style.background = "#6b5b4c"; btn.style.color = "white";
             } else { 
                 audio.pause(); 
                 btn.innerText = "PLAY MUSIC"; 
-                btn.style.background = "transparent";
-                btn.style.color = "#666";
-                btn.style.borderColor = "#888";
+                btn.style.background = "rgba(255,255,255,0.8)"; btn.style.color = "#666";
             }
         }
     </script>
